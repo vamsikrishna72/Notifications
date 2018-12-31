@@ -1,0 +1,13 @@
+{
+  "access_token" : "",
+  "refresh_token" : "",
+  "client_id" : "",
+  "client_secret" : "",
+  "sender_gmail" : "",
+  "receipant_gmail" : {
+    "TO":["",""],
+    "CC":[""],
+    "BCC":[]
+  },
+  "application_name" : "Notifications"
+}
