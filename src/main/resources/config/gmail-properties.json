@@ -1,12 +1,12 @@
 {
-  "access_token" : "",
-  "refresh_token" : "",
-  "client_id" : "",
-  "client_secret" : "",
-  "sender_gmail" : "",
+  "access_token" : "ya29.GluCBgULxkSRPQfBDNqhGBQZE-5wLW54iHpVRoE_xAbzmvrY2k613Bnz8qbbe4eWYWIRpuYYGS3S12Ew8K3AtRl1Doq4zSg_0-OmLbUNbQnVUAepIeYf8VX3qOXU",
+  "refresh_token" : "1/qt9rJGHYoDfRbJUimEVokmeDZy_5ZiPjkv7cdr-KkJk",
+  "client_id" : "91789962489-jc5lrn7jothq941h5epf2qpriq115sf3.apps.googleusercontent.com",
+  "client_secret" : "11mI2IV3nQ308RMxP2Ct_Yol",
+  "sender_gmail" : "vamsykrishna001@gmail.com",
   "receipant_gmail" : {
-    "TO":["",""],
-    "CC":[""],
+    "TO":["vamsykrishna001@gmail.com","vamsieversmile99@gmail.com"],
+    "CC":["vamsieversmile99@gmail.com"],
     "BCC":[]
   },
   "application_name" : "Notifications"
