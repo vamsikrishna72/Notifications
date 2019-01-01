@@ -19,10 +19,7 @@ import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.*;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -60,54 +57,8 @@ public class GmailNotifications {
         MimeMessage email = new MimeMessage(session);
 
         email.setFrom(new InternetAddress(from));
-        List<String> to = (ArrayList<String>)receipents.get(GmailCommons.TO);
-        List<String> cc = (ArrayList<String>)receipents.get(GmailCommons.CC);
-        List<String> bcc = (ArrayList<String>)receipents.get(GmailCommons.BCC);
-        int i = 0;
-        if(to.size() != 0 && to.size()>1){
-            Address[] addresses = new Address[to.size()];
-            for (String t : to) {
-                addresses[i] = new InternetAddress(t);
-                i++;
-            }
-            i=0;
-            email.addRecipients(javax.mail.Message.RecipientType.TO,
-                    addresses);
-        }
-        if(to.size() !=0 && to.size() ==1 ){
-            email.addRecipient(javax.mail.Message.RecipientType.TO,
-                    new InternetAddress(to.get(0)));
-        }
 
-        if(cc.size() != 0 && cc.size()>1){
-            Address[] addresses = new Address[cc.size()];
-            for (String t : cc) {
-                addresses[i] = new InternetAddress(t);
-                i++;
-            }
-            i=0;
-            email.addRecipients(javax.mail.Message.RecipientType.CC,
-                    addresses);
-        }
-        if(cc.size() !=0 && cc.size() ==1 ){
-            email.addRecipient(javax.mail.Message.RecipientType.CC,
-                    new InternetAddress(cc.get(0)));
-        }
-
-        if(bcc.size() != 0 && bcc.size()>1){
-            Address[] addresses = new Address[bcc.size()];
-            for (String t : bcc) {
-                addresses[i] = new InternetAddress(t);
-                i++;
-            }
-            i=0;
-            email.addRecipients(javax.mail.Message.RecipientType.BCC,
-                    addresses);
-        }
-        if(bcc.size() !=0 && bcc.size() ==1 ){
-            email.addRecipient(javax.mail.Message.RecipientType.BCC,
-                    new InternetAddress(bcc.get(0)));
-        }
+        havingMultipleReceipients(email,receipents);
 
         email.setSubject(subject);
 
@@ -140,7 +91,7 @@ public class GmailNotifications {
                                                         String from,
                                                         String subject,
                                                         String bodyText,
-                                                        File file)
+                                                        List<String> attachments)
             throws MessagingException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
@@ -149,6 +100,31 @@ public class GmailNotifications {
 
         email.setFrom(new InternetAddress(from));
 
+        havingMultipleReceipients(email, receipents);
+
+        email.setSubject(subject);
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(bodyText, "text/plain");
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        for (String attachment : attachments){
+            MimeBodyPart attachPart = new MimeBodyPart();
+            try {
+                attachPart.attachFile(attachment);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            multipart.addBodyPart(attachPart);
+       }
+        email.setContent(multipart);
+        return email;
+    }
+
+    public void havingMultipleReceipients(MimeMessage email, Map<String,Object> receipents) throws MessagingException {
         List<String> to = (ArrayList<String>)receipents.get(GmailCommons.TO);
         List<String> cc = (ArrayList<String>)receipents.get(GmailCommons.CC);
         List<String> bcc = (ArrayList<String>)receipents.get(GmailCommons.BCC);
@@ -161,7 +137,7 @@ public class GmailNotifications {
             }
             i=0;
             email.addRecipients(javax.mail.Message.RecipientType.TO,
-                    addresses);
+                        addresses);
         }
         if(to.size() !=0 && to.size() ==1 ){
             email.addRecipient(javax.mail.Message.RecipientType.TO,
@@ -197,25 +173,7 @@ public class GmailNotifications {
             email.addRecipient(javax.mail.Message.RecipientType.BCC,
                     new InternetAddress(bcc.get(0)));
         }
-
-        email.setSubject(subject);
-
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(bodyText, "text/plain");
-
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(mimeBodyPart);
-
-        mimeBodyPart = new MimeBodyPart();
-        DataSource source = new FileDataSource(file);
-
-        mimeBodyPart.setDataHandler(new DataHandler(source));
-        mimeBodyPart.setFileName(file.getName());
-
-        multipart.addBodyPart(mimeBodyPart);
-        email.setContent(multipart);
-
-        return email;
     }
+
 
 }
